@@ -1,0 +1,104 @@
+training: !!bool "true"
+device: "cuda:0"
+device_1: "cuda:1"
+device_2: "cuda:2"
+device_3: "cuda:3"
+unprocessed_data: '/home/lps/voicefilter/voicefilter/TIMIT/*/*/*/*.wav'
+---
+data:
+    train_path: './train_tisv'
+    train_path_unprocessed: './TIMIT/TRAIN/*/*/*.wav'
+    test_path: './test_tisv'
+    test_path_unprocessed: './TIMIT/TEST/*/*/*.wav'
+    data_preprocessed: !!bool "true" 
+    sr: 16000
+    nfft: 512 #For mel spectrogram preprocess
+    window: 0.025 #(s)
+    hop: 0.01 #(s)
+    window_vf: 0.0375
+    nmels: 40 #Number of mel energies
+    tisv_frame: 180 #Max number of time steps in input after preprocess
+    train_path_vf: './train'
+    train_path_mixed_vf: './train/mixed'
+    train_path_reference_vf: './train/reference'
+    train_path_clean_vf: './train/clean'
+    train_path_noise_vf: './train/noise'
+    test_path_vf: './test'
+    test_path_mixed_vf: './test/mixed'
+    test_path_reference_vf: './test/reference'
+    test_path_clean_vf: './test/clean'
+    test_path_noise_vf: './test/noise'
+    train_clean: './train_data/clean'
+    train_mixed: './train_data/mixed'
+    train_reference: './train_data/reference'
+    train_noise: './train_data/noise'
+    test_clean: './test_data/clean'
+    test_mixed: './test_data/mixed'
+    test_reference: './test_data/reference'
+    test_noise: './test_data/noise'
+    need_noise: !!bool "true"
+    need_interference: !!bool "false"
+    noise_path: '/home/lps/voicefilter/voicefilter/noise'
+    noise_path_all: './noise_all'
+    num_noise_utterance_20: 1
+    num_noise_utterance_15: 2
+    num_noise_utterance_10: 3
+    num_noise_utterance_5: 4
+    num_noise_utterance_0: 7
+    num_noise_utterance__5: 7
+    SNR: -10
+    train_vad: './train_data/vad'
+    train_vad_301: './train_data/vad_301'
+    test_vad: './test_data/vad'
+    train_path_crn: './train_all'
+    train_path_mixed_crn: './train_all/mixed'
+    train_path_reference_crn: './train_all/reference'
+    train_path_clean_crn: './train_all/clean'
+    train_path_noise_crn: './train_all/noise'
+    test_path_crn: './test_all'
+    test_path_mixed_crn: './test_all/mixed'
+    test_path_reference_crn: './test_all/reference'
+    test_path_clean_crn: './test_all/clean'
+    test_path_noise_crn: './test_all/noise'
+    train_clean_all: './train_data_all/clean'
+    train_mixed_all: './train_data_all/mixed'
+    train_reference_all: './train_data_all/reference'
+    train_noise_all: './train_data_all/noise'
+    train_vad_all: './train_data_all/vad'
+    test_clean_all: './test_data_all/clean'
+    test_mixed_all: './test_data_all/mixed'
+    test_reference_all: './test_data_all/reference'
+    test_noise_all: './test_data_all/noise'
+    test_vad_all: './test_data_all/vad'
+---   
+model:
+    hidden: 768 #Number of LSTM hidden layer units
+    num_layer: 3 #Number of LSTM layers
+    proj: 256 #Embedding size
+    model_path: '/home/lps/voicefilter/voicefilter/model.model' #Model path for testing, inference, or resuming training
+    model_path_vf: './model_vf'
+---
+train:
+    N : 4 #Number of speakers in batch
+    M : 5 #Number of utterances per speaker
+    batch: 128
+    batch_0: 40
+    batch_1: 40
+    batch_2: 40
+    batch_test: 128
+    num_workers: 8 #number of workers for data loader
+    lr: 0.001 
+    momentum: 0.9
+    epochs: 1000 #Max training speaker epoch 
+    epochs_vf: 1000
+    log_interval: 30 #Epochs before printing progress
+    log_file: './speech_id_checkpoint/Stats'
+    checkpoint_interval: 120 #Save model after x speaker epochs
+    checkpoint_dir: './speech_id_checkpoint'
+    restore: !!bool "false" #Resume training from previous model path
+---
+test:
+    N : 4 #Number of speakers in batch
+    M : 10 #Number of utterances per speaker
+    num_workers: 8 #number of workers for data laoder
+    epochs: 16 #testing speaker epochs
