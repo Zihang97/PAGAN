@@ -1,0 +1,130 @@
+training: !!bool "true"
+device: "cuda:0"
+device_1: "cuda:1"
+device_2: "cuda:2"
+device_3: "cuda:3"
+device_4: "cuda:4"
+device_5: "cuda:5"
+device_6: "cuda:6"
+device_7: "cuda:7"
+device_8: "cuda:8"
+device_9: "cuda:9"
+device_10: "cuda:10"
+device_11: "cuda:11"
+device_12: "cuda:12"
+device_13: "cuda:13"
+device_14: "cuda:14"
+device_15: "cuda:15"
+unprocessed_data: '/home/lps/voicefilter/voicefilter/TIMIT/*/*/*/*.wav'
+test_unprocessed_data: '/home/lps/voicefilter/voicefilter/TIMIT/TEST/DR1/FAKS0/SA1.WAV'
+---
+data:
+    train_path: './train_tisv'
+    train_path_unprocessed: './TIMIT/TRAIN/*/*/*.wav'
+    test_path: './test_tisv'
+    test_path_unprocessed: './TIMIT/TEST/*/*/*.wav'
+    data_preprocessed: !!bool "true" 
+    sr: 16000
+    nfft: 512 #For mel spectrogram preprocess
+    window: 0.02 #(s)
+    window_gan: 0.02
+    hop: 0.01 #(s)
+    window_vf: 0.0375
+    nmels: 40 #Number of mel energies
+    tisv_frame: 180 #Max number of time steps in input after preprocess
+    train_path_vf: './train'
+    train_path_mixed_vf: './train/mixed'
+    train_path_reference_vf: './train/reference'
+    train_path_clean_vf: './train/clean'
+    train_path_noise_vf: './train/noise'
+    test_path_vf: './test'
+    test_path_mixed_vf: './test/mixed'
+    test_path_reference_vf: './test/reference'
+    test_path_clean_vf: './test/clean'
+    test_path_noise_vf: './test/noise'
+    train_clean: './train_data/clean'
+    train_mixed: './train_data/mixed'
+    train_reference: './train_data/reference'
+    train_noise: './train_data/noise'
+    test_clean: './test_data/clean'
+    test_mixed: './test_data/mixed'
+    test_reference: './test_data/reference'
+    test_noise: './test_data/noise'
+    need_noise: !!bool "true"
+    need_interference: !!bool "false"
+    noise_path: '/home/lps/voicefilter/voicefilter/noise'
+    noise_path_all: './noise_all'
+    num_noise_utterance_15: 3
+    num_noise_utterance_10: 4
+    num_noise_utterance_5: 5
+    num_noise_utterance_0: 6
+    num_noise_utterance__5: 7
+    SNR: -10
+    train_vad: './train_data/vad'
+    train_vad_301: './train_data/vad_301'
+    test_vad: './test_data/vad'
+    train_path_crn: '/workspace/data/rgan/train'
+    train_path_clean_crn: '/workspace/data/rgan/train/clean_wav'
+    train_path_mixed_crn: '/workspace/data/rgan/train/noisy_wav'
+    train_path_reference_crn: '/workspace/data/rgan/train/reference_wav'
+    train_path_noise_crn: '/workspace/data/rgan/train/noise_wav'
+    test_path_crn: '/workspace/data/rgan/test'
+    test_path_clean_crn: '/workspace/data/rgan/test/clean_wav'
+    test_path_mixed_crn: '/workspace/data/rgan/test/noisy_wav'
+    test_path_reference_crn: '/workspace/data/rgan/test/reference_wav'
+    test_path_noise_crn: '/workspace/data/rgan/test/noise_wav'
+    train_clean_all: './train_data_all/clean'
+    train_mixed_all: './train_data_all/mixed'
+    train_reference_all: './train_data_all/reference'
+    train_noise_all: './train_data_all/noise'
+    train_vad_all: './train_data_all/vad'
+    test_clean_all: './test_data_all/clean'
+    test_mixed_all: './test_data_all/mixed'
+    test_reference_all: './test_data_all/reference'
+    test_noise_all: './test_data_all/noise'
+    test_vad_all: './test_data_all/vad'
+    gan_clean_wav: '/workspace/data/rgan/train/clean_wav'
+    gan_noisy_wav: '/workspace/data/rgan/train/noisy_wav'
+    gan_clean_tf: '/workspace/data/rgan/train/clean_tf'
+    gan_noisy_tf: '/workspace/data/rgan/train/noisy_tf'
+    gan_noisy_logmel: '/workspace/data/rgan/train/noisy_logmel'
+    gan_noisy_phase: '/workspace/data/rgan/train/noisy_phase'
+    gan_clean_wav_npy: '/workspace/data/rgan/train/clean_wav'
+    gan_noisy_wav_npy: '/workspace/data/rgan/train/noisy_wav'
+---   
+model:
+    hidden: 768 #Number of LSTM hidden layer units
+    num_layer: 3 #Number of LSTM layers
+    proj: 256 #Embedding size
+    model_path: '/home/lps/voicefilter/voicefilter/model.model' #Model path for testing, inference, or resuming training
+    model_path_vf: './model_vf'
+    model_gan_path: '/data2/lps/model_gan'
+    model_vf: '/data2/lps/vf_model'
+---
+train:
+    N : 4 #Number of speakers in batch
+    M : 5 #Number of utterances per speaker
+    batch: 128
+    batch_gan: 128
+    batch_gan_1: 3
+    batch_0: 40
+    batch_1: 40
+    batch_2: 40
+    batch_test: 128
+    num_workers: 16 #number of workers for data loader
+    lr: 0.001 
+    lr_gan: 0.0002
+    momentum: 0.9
+    epochs: 1000 #Max training speaker epoch 
+    epochs_vf: 1000
+    log_interval: 30 #Epochs before printing progress
+    log_file: './speech_id_checkpoint/Stats'
+    checkpoint_interval: 120 #Save model after x speaker epochs
+    checkpoint_dir: './speech_id_checkpoint'
+    restore: !!bool "false" #Resume training from previous model path
+---
+test:
+    N : 4 #Number of speakers in batch
+    M : 10 #Number of utterances per speaker
+    num_workers: 8 #number of workers for data laoder
+    epochs: 16 #testing speaker epochs
