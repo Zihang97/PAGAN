@@ -31,3 +31,5 @@ python test_PAGAN_base.py
 python train_rgan_ft_lps_multi_SN_real_ori_ff.py
 python test_rgan_ff.py
 ```
+##License
+MIT License
